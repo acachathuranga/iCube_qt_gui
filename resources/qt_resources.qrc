@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/singhealth_logo.png</file>
+        <file>images/sutd_logo.png</file>
+    </qresource>
+    <qresource prefix="/images/Emoji">
+        <file>images/Emoji/angry_eyes.png</file>
+        <file>images/Emoji/angry_face.png</file>
+        <file>images/Emoji/angry_mouth.png</file>
+        <file>images/Emoji/dead_face.png</file>
+        <file>images/Emoji/happy_face.png</file>
+        <file>images/Emoji/happy_mouth.png</file>
+        <file>images/Emoji/nervous_mouth.png</file>
+        <file>images/Emoji/sad_eyes.png</file>
+        <file>images/Emoji/sad_face.png</file>
+        <file>images/Emoji/sad_mouth.png</file>
+        <file>images/Emoji/scream_face.png</file>
+        <file>images/Emoji/scream_mouth.png</file>
+        <file>images/Emoji/sleepy_eyes.png</file>
+        <file>images/Emoji/sleepy_face.png</file>
+        <file>images/Emoji/eyes.png</file>
+    </qresource>
+</RCC>
