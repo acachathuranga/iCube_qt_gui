@@ -30,7 +30,7 @@ int main(int argc, char **argv)
   // ...
   player.setMedia(QUrl::fromLocalFile(QString().fromStdString(path) + "/resources/audio/startup_tone.mp3"));
   player.setVolume(50);
-  //player.play(); //TODO Uncomment audio
+  player.play();
   splash_screen->show();
 
 

@@ -2,6 +2,9 @@
 #define MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <QAction>
+#include <QToolBar>
+#include <QMenuBar>
 #include <QTimer>
 #include <QThread>
 #include <QVBoxLayout>
@@ -35,6 +38,7 @@ public:
 
 private slots:
     void button_clicked();
+    void settings_screen_timeout();
 
 private:
     Ui::MainWindow *ui;
@@ -49,13 +53,6 @@ private:
     QStackedWidget *central_widget_;
     EmojiFace *collision_indicator;
     SettingsScreen *settings_screen_;
-
-
-    int count = 0;
-    SettingsScreen settings;
-    ros::Publisher chatter_pub;
-
-
 };
 
 #endif // MAIN_WINDOW_H
