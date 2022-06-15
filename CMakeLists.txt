@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   roslib
   std_msgs
+  robot_docker
+  sensor_msgs
 )
 
 ## Auto generate Qt headers to include

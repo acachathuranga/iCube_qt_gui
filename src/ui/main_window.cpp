@@ -29,6 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     console_ = new Console(&console_text_edit_);
 
+    /// Status Bar
+    QLabel *status_label = new QLabel;
+    status_label->setText("Battery Level");
+    battery_level_progress_bar_.setStyleSheet("QProgressBar::chunk {background-color: rgb(0, 255, 0);}");
+    battery_level_progress_bar_.setAlignment(Qt::AlignCenter);
+    this->statusBar()->addPermanentWidget(status_label);
+    this->statusBar()->addPermanentWidget(&battery_level_progress_bar_, 1);
+
     /// Mqtt Adaptor
     robot_com_ = new RobotCommunication(console_);
 
@@ -42,9 +50,12 @@ MainWindow::MainWindow(QWidget *parent) :
     central_widget_->addWidget(collision_indicator);
     central_widget_->addWidget(settings_screen_);
 
-
     connect(collision_indicator, &CollisionIndicator::pressed, this, &MainWindow::button_clicked);
     connect(settings_screen_, &SettingsScreen::screen_timeout, this, &MainWindow::settings_screen_timeout);
+
+    std::string battery_state_topic;
+    ros::param::param<std::string>(battery_status_topic_param_, battery_state_topic, "/battery_state");
+    battery_state_sub_ = nh_.subscribe(battery_state_topic, 1000, &MainWindow::battery_state_callback, this);
 
     console_->print("Starting Program");
 }
@@ -64,6 +75,11 @@ void MainWindow::button_clicked()
 void MainWindow::settings_screen_timeout()
 {
     central_widget_->setCurrentIndex(0);
+}
+
+void MainWindow::battery_state_callback(const sensor_msgs::BatteryStateConstPtr &msg)
+{
+    battery_level_progress_bar_.setValue(int(msg->percentage));
 }
 
 void RosThread::run()

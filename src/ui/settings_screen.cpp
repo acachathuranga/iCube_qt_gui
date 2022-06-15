@@ -15,6 +15,11 @@ SettingsScreen::SettingsScreen(ros::NodeHandle *nh, RobotCommunication *com, QWi
 
     ros::param::param<std::string>(robot_command_topic_param_, robot_command_topic_, "robot_depart");
     ros::param::param<std::string>(robot_command_field_param_, robot_command_field_, "command");
+    ros::param::param<std::string>(robot_supervisor_command_topic_param_, robot_supervisor_command_topic_, "/supervisory_command");
+    ros::param::param<std::string>(robot_gripper_action_topic_param_, robot_gripper_action_, "/gripper_control/goal");
+
+    robot_supervisory_command_publisher_ = nh_->advertise<std_msgs::String>(robot_supervisor_command_topic_, 100);
+    robot_gripper_action_publisher_ = nh->advertise<robot_docker::GripperActionGoal>(robot_gripper_action_, 100);
 }
 
 SettingsScreen::~SettingsScreen()
@@ -79,22 +84,34 @@ void SettingsScreen::on_return_pushButton_clicked()
 
 void SettingsScreen::on_release_pushButton_clicked()
 {
-    robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_RELEASE_COMMAND);
+    robot_docker::GripperActionGoal goal;
+    goal.goal.command = goal.goal.RELEASE;
+    robot_gripper_action_publisher_.publish(goal);
+    //robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_RELEASE_COMMAND);
 }
 
 void SettingsScreen::on_clamp_pushButton_clicked()
 {
-    robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_CLAMP_COMMAND);
+    robot_docker::GripperActionGoal goal;
+    goal.goal.command = goal.goal.CLAMP;
+    robot_gripper_action_publisher_.publish(goal);
+    //robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_CLAMP_COMMAND);
 }
 
 void SettingsScreen::on_extended_release_pushButton_clicked()
 {
-    robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_EXTENDED_RELEASE_COMMAND);
+    robot_docker::GripperActionGoal goal;
+    goal.goal.command = goal.goal.EXTENDED_RELEASE;
+    robot_gripper_action_publisher_.publish(goal);
+    //robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_EXTENDED_RELEASE_COMMAND);
 }
 
 void SettingsScreen::on_extended_clamp_pushButton_clicked()
 {
-    robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_EXTENDED_CLAMP_COMMAND);
+    robot_docker::GripperActionGoal goal;
+    goal.goal.command = goal.goal.EXTENDED_CLAMP;
+    robot_gripper_action_publisher_.publish(goal);
+    //robot_com_->publish(robot_command_topic_, robot_command_field_, GRIPPER_EXTENDED_CLAMP_COMMAND);
 }
 
 void SettingsScreen::on_cancel_mission_pushButton_clicked()
@@ -116,11 +133,25 @@ void SettingsScreen::on_shutdown_pushButton_clicked()
     msgBox.addButton(QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::No);
     if(msgBox.exec() == QMessageBox::Yes){
-      system("echo NUC717 | sudo -S shutdown now");
+      system("echo password | sudo -S shutdown now");
     }
 }
 
 void SettingsScreen::on_exit_ui_pushButton_clicked()
 {
     QApplication::exit();
+}
+
+void SettingsScreen::on_safety_disable_pushButton_clicked()
+{
+    std_msgs::String msg;
+    msg.data = DISABLE_MOTOR_FILTER_COMMAND;
+    robot_supervisory_command_publisher_.publish(msg);
+}
+
+void SettingsScreen::on_robot_initialize_pushButton_clicked()
+{
+    std_msgs::String msg;
+    msg.data = ROBOT_INITIALIZE_COMMAND;
+    robot_supervisory_command_publisher_.publish(msg);
 }

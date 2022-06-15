@@ -6,6 +6,9 @@
 #include <QMessageBox>
 
 #include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <robot_docker/GripperActionGoal.h>
+#include <robot_docker/GripperActionGoal.h>
 #include "icube_gui/Tools/robotCommunication.h"
 #include "icube_gui/global_defs.h"
 
@@ -56,26 +59,39 @@ private slots:
 
     void on_exit_ui_pushButton_clicked();
 
+    void on_safety_disable_pushButton_clicked();
+
+    void on_robot_initialize_pushButton_clicked();
+
 private:
     Ui::SettingsScreen *ui;
     ros::NodeHandle *nh_;
     RobotCommunication *robot_com_;
+
+    ros::Publisher robot_supervisory_command_publisher_;
+    ros::Publisher robot_gripper_action_publisher_;
 
     bool pinned_ = false;
     QTimer *screen_timer_;
 
     std::string robot_command_topic_;
     std::string robot_command_field_;
+    std::string robot_supervisor_command_topic_;
+    std::string robot_gripper_action_;
 
     const std::string robot_command_topic_param_ = K_ROBOT_COMMAND_TOPIC_PARAM;
     const std::string robot_command_field_param_ = K_ROBOT_COMMAND_FIELD_PARAM;
+    const std::string robot_supervisor_command_topic_param_ = K_ROBOT_SUPERVISOR_TOPIC_PARAM;
+    const std::string robot_gripper_action_topic_param_ = K_ROBOT_GRIPPER_ACTION_PARAM;
 
     const std::string GRIPPER_CLAMP_COMMAND = K_GRIPPER_CLAMP_COMMAND;
     const std::string GRIPPER_RELEASE_COMMAND = K_GRIPPER_RELEASE_COMMAND;
     const std::string GRIPPER_EXTENDED_CLAMP_COMMAND = K_GRIPPER_EXTENDED_CLAMP_COMMAND;
     const std::string GRIPPER_EXTENDED_RELEASE_COMMAND = K_GRIPPER_EXTENDED_RELEASE_COMMAND;
     const std::string ROBOT_SELF_TEST_COMMAND = K_ROBOT_SELF_TEST_COMMAND;
+    const std::string ROBOT_INITIALIZE_COMMAND = K_ROBOT_INITIALIZE_COMMAND;
     const std::string MISSION_CANCEL_COMMAND = K_MISSION_CANCEL_COMMAND;
+    const std::string DISABLE_MOTOR_FILTER_COMMAND = K_DISABLE_MOTOR_FILTER_COMMAND;
 
 
 
