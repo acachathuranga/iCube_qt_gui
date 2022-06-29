@@ -17,6 +17,9 @@ EmojiFace::EmojiFace(QWidget *parent) :
     QTimer *animation_timer = new QTimer(this);
     connect(animation_timer, &QTimer::timeout, this, &EmojiFace::animateEyes);
     animation_timer->start(3000);
+
+    qRegisterMetaType<EmojiFace::Mood>("EmojiFace::Mood");
+    connect(this, &EmojiFace::moodChange, this, &EmojiFace::changeMood);
 }
 
 EmojiFace::~EmojiFace()
@@ -41,6 +44,11 @@ void EmojiFace::mousePressEvent(QMouseEvent *event)
 }
 
 void EmojiFace::setMood(EmojiFace::Mood mood)
+{
+    emit moodChange(mood);
+}
+
+void EmojiFace::changeMood(EmojiFace::Mood mood)
 {
     switch (mood)
     {

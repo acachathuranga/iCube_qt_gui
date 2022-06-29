@@ -42,7 +42,18 @@ signals:
      */
     void pressed(void);
 
+    /**
+     * @brief moodChange
+     * @param mood
+     */
+    void moodChange(EmojiFace::Mood mood);
 
+private slots:
+    /**
+     * @brief changeMood : This slot is used to decouple setMood callbacks from external threads
+     * @param mood
+     */
+    void changeMood(EmojiFace::Mood mood);
 private:
     enum class EmojiComponent{
         FACE,
@@ -57,7 +68,7 @@ private:
     int eye_widget_max_movement_distance_ = 60;
 
     void setImage(EmojiFace::EmojiComponent component, QString image_url);
-    void animateEyes(void);
+    void animateEyes(void);  
 
 };
 
