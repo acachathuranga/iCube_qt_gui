@@ -1,11 +1,12 @@
 #include "icube_gui/ui/settings_screen.h"
 #include "ui_settings_screen.h"
 
-SettingsScreen::SettingsScreen(ros::NodeHandle *nh, RobotCommunication *com, QWidget *parent) :
+SettingsScreen::SettingsScreen(ros::NodeHandle *nh, RobotCommunication *com, Console *console, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SettingsScreen),
     nh_(nh),
-    robot_com_(com)
+    robot_com_(com),
+    console_(console)
 {
     ui->setupUi(this);
 
@@ -20,6 +21,8 @@ SettingsScreen::SettingsScreen(ros::NodeHandle *nh, RobotCommunication *com, QWi
 
     robot_supervisory_command_publisher_ = nh_->advertise<std_msgs::String>(robot_supervisor_command_topic_, 100);
     robot_gripper_action_publisher_ = nh->advertise<robot_docker::GripperActionGoal>(robot_gripper_action_, 100);
+
+    robot_com_->subscribe(robot_command_topic_, boost::bind(&SettingsScreen::on_robot_command, this, _1));
 }
 
 SettingsScreen::~SettingsScreen()
@@ -40,7 +43,6 @@ void SettingsScreen::hideEvent(QHideEvent *event)
 
 void SettingsScreen::mousePressEvent(QMouseEvent *event)
 {
-    std::cout << "resetted" << std::endl;
     /// Reset screen_timeout timer upon mouse event
     screen_timer_->stop();
     screen_timer_->start();
@@ -154,4 +156,22 @@ void SettingsScreen::on_robot_initialize_pushButton_clicked()
     std_msgs::String msg;
     msg.data = ROBOT_INITIALIZE_COMMAND;
     robot_supervisory_command_publisher_.publish(msg);
+}
+
+
+void SettingsScreen::on_robot_command(std::string msg)
+{
+    Json::Value json_msg;
+    Json::Reader reader;
+    bool parsingSuccessful = reader.parse( msg, json_msg );     //parse process
+    if ( !parsingSuccessful )
+    {
+        console_->print("Failed to parse msg ['" + msg + "'] : " + reader.getFormattedErrorMessages());
+    }
+
+    if (json_msg.get(robot_command_field_, "").asString() == ROBOT_PARK_COMMAND)
+    {
+        on_extended_clamp_pushButton_clicked();
+        
+    }
 }

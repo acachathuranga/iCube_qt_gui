@@ -24,6 +24,7 @@
 
 #define K_ROBOT_SELF_TEST_COMMAND "self_test"
 #define K_ROBOT_INITIALIZE_COMMAND "initialize"
+#define K_ROBOT_PARK_COMMAND "park"
 
 #define K_DISABLE_MOTOR_FILTER_COMMAND "disable_motor_filter"
 

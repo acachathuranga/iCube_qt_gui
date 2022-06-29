@@ -10,6 +10,7 @@
 #include <robot_docker/GripperActionGoal.h>
 #include <robot_docker/GripperActionGoal.h>
 #include "icube_gui/Tools/robotCommunication.h"
+#include "icube_gui/Tools/console.h"
 #include "icube_gui/global_defs.h"
 
 namespace Ui {
@@ -23,7 +24,7 @@ class SettingsScreen : public QWidget
 public:
     int screen_timeout_milliseconds = 5000;
 
-    SettingsScreen(ros::NodeHandle *nh, RobotCommunication *com, QWidget *parent = nullptr);
+    SettingsScreen(ros::NodeHandle *nh, RobotCommunication *com, Console *console, QWidget *parent = nullptr);
     ~SettingsScreen();
 
 signals:
@@ -67,6 +68,7 @@ private:
     Ui::SettingsScreen *ui;
     ros::NodeHandle *nh_;
     RobotCommunication *robot_com_;
+    Console *console_;
 
     ros::Publisher robot_supervisory_command_publisher_;
     ros::Publisher robot_gripper_action_publisher_;
@@ -92,10 +94,12 @@ private:
     const std::string ROBOT_INITIALIZE_COMMAND = K_ROBOT_INITIALIZE_COMMAND;
     const std::string MISSION_CANCEL_COMMAND = K_MISSION_CANCEL_COMMAND;
     const std::string DISABLE_MOTOR_FILTER_COMMAND = K_DISABLE_MOTOR_FILTER_COMMAND;
+    const std::string ROBOT_PARK_COMMAND = K_ROBOT_PARK_COMMAND;
 
 
 
     void on_screen_timeout(void);
+    void on_robot_command(std::string msg);
 };
 
 #endif // SETTINGS_SCREEN_H

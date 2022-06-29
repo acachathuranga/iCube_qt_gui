@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setCentralWidget(central_widget_);
 
     collision_indicator = new CollisionIndicator(&nh_, robot_com_, console_);
-    settings_screen_ = new SettingsScreen(&nh_, robot_com_);
+    settings_screen_ = new SettingsScreen(&nh_, robot_com_, console_);
 
     central_widget_->addWidget(collision_indicator);
     central_widget_->addWidget(settings_screen_);
